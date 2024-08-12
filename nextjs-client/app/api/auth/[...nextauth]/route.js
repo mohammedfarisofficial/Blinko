@@ -46,11 +46,36 @@ export const authOptions = {
     strategy: "jwt",
   },
   callbacks: {
+    async signin({ user, account }) {
+      console.log("trigger");
+      if (account?.provider == "credentials") {
+        return true;
+      }
+      if (account?.provider == "google") {
+        await connect();
+        try {
+          const existingUser = await User.findOne({ email: user.email });
+          if (!existingUser) {
+            const newUser = new User({
+              email: user.email,
+            });
+
+            await newUser.save();
+            return true;
+          }
+          return true;
+        } catch (err) {
+          console.log("Error saving user", err);
+          return false;
+        }
+      }
+    },
     async jwt({ token, user }) {
+      console.log("User ::", user);
       if (user) {
-        token.id = user._id.toString();
+        token.id = user._id?.toString() || user.id.toString();
         token.email = user.email;
-        token.username = user.username;
+        token.username = user.username || user.name;
         token.image = user?.image;
       }
       console.log("**JWT token generated:**", token);
