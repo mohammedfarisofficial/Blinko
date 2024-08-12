@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
 
-const Breadcrumbs = ({routesMap, root, rootpath}) => {
+const Breadcrumbs = ({ routesMap, root, rootpath }) => {
   const pathname = usePathname();
   const pathnames = pathname.split("/").filter((path) => path && path !== root);
 
@@ -28,7 +28,7 @@ const Breadcrumbs = ({routesMap, root, rootpath}) => {
           )}
         </BreadcrumbItem>
         {pathnames.map((path, index) => {
-          const href = `/${pathnames.slice(0, index + 1).join("/")}`;
+          const href = `${rootpath}/${pathnames.slice(0, index + 1).join("/")}`;
           const isLast = index === pathnames.length - 1;
           return (
             <React.Fragment key={href}>

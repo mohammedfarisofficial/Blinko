@@ -37,7 +37,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
 
   return (
-    <div className="flex px-[2rem] items-center fixed  justify-between h-[80px] w-full">
+    <div className="flex px-[2rem] items-center fixed  justify-between h-[80px] w-full z-99">
       <div className="flex items-center">
         <Sheet>
           <SheetTrigger>
