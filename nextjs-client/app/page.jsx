@@ -4,11 +4,6 @@ import jsPDF from "jspdf";
 import * as pdfjsLib from "pdfjs-dist";
 import "pdfjs-dist/web/pdf_viewer.css";
 
-import { pdfjs } from "react-pdf";
-// pdfjs.GlobalWorkerOptions.workerSrc =
-//   "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
-
-// pdfjs.GlobalWorkerOptions.workerSrc="https://unpkg.com/pdfjs-dist@4.4.168/legacy/build/pdf.worker.min.mjs"
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`;
 
 import { Button } from "@/components/ui/button";
@@ -25,6 +20,8 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setNavigation } from "./store/reducers/uiSlice";
 import { setUniversities } from "./store/reducers/dataSlice";
+import { useSession } from "next-auth/react";
+import { setAuth } from "./store/reducers/authSlice";
 
 const Home = () => {
   const [bits, setBits] = useState([{ title: "", content: "" }]);
@@ -34,6 +31,15 @@ const Home = () => {
   const [progress, setProgress] = useState("");
 
   const dispatch = useDispatch();
+
+  const session = useSession();
+
+  useEffect(() => {
+    console.log("home session", session);
+    if (session.status === "authenticated") {
+      dispatch(setAuth({ user: session.data }));
+    }
+  }, [session]);
 
   const updateProgress = (message) => {
     setProgress(message);
@@ -52,10 +58,8 @@ const Home = () => {
   const fetchUniveristiesData = async () => {
     try {
       const response = await axios.get("api/universities");
-      console.log("universities res", response);
       if (response.status === 200) {
         dispatch(setUniversities(response.data));
-        // dispatch(setNavigation(response.data));
       }
     } catch (err) {
       console.log(err);
@@ -64,7 +68,7 @@ const Home = () => {
   useEffect(() => {
     fetchNavdata();
     fetchUniveristiesData();
-  }, [fetchNavdata,fetchUniveristiesData]);
+  }, [fetchNavdata, fetchUniveristiesData]);
 
   const generatePDF = async () => {
     // ReactGA.event({

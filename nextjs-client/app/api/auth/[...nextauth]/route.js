@@ -18,6 +18,7 @@ export const authOptions = {
       },
       async authorize(credentials) {
         await connect();
+        console.log("trigger authorize");
         const user = await User.findOne({ email: credentials.email }).select(
           "_id email username image password"
         );
@@ -47,11 +48,11 @@ export const authOptions = {
   },
   callbacks: {
     async signin({ user, account }) {
-      console.log("trigger");
+      console.log("trigger callback");
       if (account?.provider == "credentials") {
         return true;
       }
-      if (account?.provider == "google") {
+      if (account?.provider == "google" || account?.provider == "github") {
         await connect();
         try {
           const existingUser = await User.findOne({ email: user.email });
@@ -91,6 +92,8 @@ export const authOptions = {
       return session;
     },
     async redirect({ url, baseUrl }) {
+      console.log('Redirect URL:', url);
+      console.log('Base URL:', baseUrl);
       return baseUrl;
     },
   },
