@@ -18,6 +18,7 @@ export const authOptions = {
       },
       async authorize(credentials) {
         await connect();
+        console.log("trigger authorize");
         const user = await User.findOne({ email: credentials.email }).select(
           "_id email username image password"
         );
@@ -46,11 +47,36 @@ export const authOptions = {
     strategy: "jwt",
   },
   callbacks: {
+    async signin({ user, account }) {
+      console.log("trigger callback");
+      if (account?.provider == "credentials") {
+        return true;
+      }
+      if (account?.provider == "google" || account?.provider == "github") {
+        await connect();
+        try {
+          const existingUser = await User.findOne({ email: user.email });
+          if (!existingUser) {
+            const newUser = new User({
+              email: user.email,
+            });
+
+            await newUser.save();
+            return true;
+          }
+          return true;
+        } catch (err) {
+          console.log("Error saving user", err);
+          return false;
+        }
+      }
+    },
     async jwt({ token, user }) {
+      console.log("User ::", user);
       if (user) {
-        token.id = user._id.toString();
+        token.id = user._id?.toString() || user.id.toString();
         token.email = user.email;
-        token.username = user.username;
+        token.username = user.username || user.name;
         token.image = user?.image;
       }
       console.log("**JWT token generated:**", token);
@@ -66,6 +92,8 @@ export const authOptions = {
       return session;
     },
     async redirect({ url, baseUrl }) {
+      console.log('Redirect URL:', url);
+      console.log('Base URL:', baseUrl);
       return baseUrl;
     },
   },

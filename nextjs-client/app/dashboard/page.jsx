@@ -29,6 +29,12 @@ const Dashboard = () => {
   return (
     <div className="w-full h-[100vh] flex items-center flex-col">
       <Header>
+        <div><h1>University Data</h1><p className="text-gray-400 text-sm">list of university data</p></div>
+        <Link href="/dashboard/upload-university">
+          <Button>Add Unversity</Button>
+        </Link>
+      </Header>
+      <Header>
         <div><h1>List of notes</h1><p className="text-gray-400 text-sm">list of uploaded notes</p></div>
         <Link href="/dashboard/upload-note">
           <Button>Upload New</Button>

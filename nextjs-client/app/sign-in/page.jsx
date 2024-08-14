@@ -29,14 +29,11 @@ const SignIn = () => {
   const signInHandler = async (e) => {
     e.preventDefault();
     try {
-      console.log("trigger")
       const response = await signIn("credentials", {
         redirect: false,
         email: loginCredential.email,
         password: loginCredential.password,
       });
-      console.log("trigger 1")
-      console.log("login response", response);
       if (response.status === 200) {
         dispatch(setAuth({ user: loginCredential }));
         router.push("/");

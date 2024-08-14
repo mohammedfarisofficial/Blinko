@@ -2,19 +2,19 @@ import slugify from "slugify";
 
 const generateUniqueSlug = async (Model, title) => {
   try {
-    let slug = slugify(title, { lower: true, strict: true });
-    let slugExists = await Model.findOne({ slug });
-
+    let baseSlug = slugify(title, { lower: true, strict: true });
+    let slug = baseSlug;
     let count = 1;
-    while (slugExists) {
-      slug = `${slugify(title, { lower: true, strict: true })}-${count}`;
-      slugExists = await Model.findOne({ slug });
+
+    while (await Model.findOne({ slug })) {
+      slug = `${baseSlug}-${count}`;
       count++;
     }
 
     return slug;
   } catch (error) {
-    console.log(error);
+    console.error("Error generating unique slug:", error);
+    throw new Error("Error generating unique slug");
   }
 };
 
