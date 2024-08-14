@@ -3,28 +3,45 @@ import { NextResponse } from "next/server";
 import connect from "@/utils/db";
 import { generateUniqueSlug } from "../utils/generateSlug";
 
-// Create Univeristy
+export const dynamic = "force-dynamic";
+
+// Create University
 export const POST = async (request) => {
   const { title } = await request.json();
   if (!title) {
-    return new NextResponse("Title is required!", { status: 404 });
+    return NextResponse.json(
+      { message: "Title is required!" },
+      { status: 400 }
+    );
   }
+
   try {
     await connect();
-    // gen slug
+
+    // Generate a unique slug
     const slug = await generateUniqueSlug(University, title);
-    if (!slug) {
-      return new NextResponse("Can't generate slug!", { status: 404 });
-    }
+
     const newUniversity = new University({ slug, title });
-    const universitySaved = await newUniversity.save();
-    if (universitySaved) {
-      return new NextResponse.json(universitySaved, { status: 201 });
+
+    try {
+      const universitySaved = await newUniversity.save();
+      return NextResponse.json(universitySaved, { status: 201 });
+    } catch (err) {
+      if (err.code === 11000) {
+        // Duplicate key error
+        return NextResponse.json(
+          { message: "University with this title already exists!" },
+          { status: 409 }
+        );
+      }
+      throw err;
     }
-    return new NextResponse("Can't create university!", { status: 404 });
   } catch (err) {
-    console.log(err);
-    return new NextResponse(`Error: ${err.message}`, { status: 404 });
+    console.error("Server error:", err);
+    return NextResponse.json(
+      { message: `Error: ${err.message}` },
+      { status: 500 }
+    );
   }
 };
 

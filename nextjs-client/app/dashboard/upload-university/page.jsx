@@ -14,6 +14,7 @@ import {
 
 const UploadUniversity = () => {
   const router = useRouter();
+
   const navigationHandler = (type) => {
     router.push(`/dashboard/upload-university/${type}`);
   };

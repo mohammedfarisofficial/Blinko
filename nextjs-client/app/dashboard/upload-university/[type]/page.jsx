@@ -1,15 +1,14 @@
 "use client";
+import { useState } from "react";
 import { redirect, useParams } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+
 import { Card } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+
 import {
   COURSE,
   SEMESTER,
@@ -17,58 +16,94 @@ import {
   SUBJECT,
   UNIVERSITY,
 } from "@/app/contants/universities";
+import { createUniversity } from "@/app/store/async-actions/dataAction";
+
+const initialState = {
+  university: "",
+};
 
 const UploadUniveritiesData = () => {
-  const { type } = useParams();
+  const { type: pageType } = useParams();
+  const [univeristyData, setUniveristyData] = useState(initialState);
+  // const { universities, courses, streams, semesters, subjects } = useSelector(
+  //   (state) => state.data.universities
+  // );
 
-  if (!type) {
+  const dispatch = useDispatch();
+
+  if (!pageType) {
     redirect("/dashboard/upload-university");
   }
+
+  const universityUploadhandler = async () => {
+    try {
+      switch (pageType) {
+        case "university": {
+          const uploadData = {
+            title: univeristyData.university,
+          };
+          await dispatch(createUniversity({ uploadData, pageType }));
+          setUniveristyData(initialState);
+          break;
+        }
+        case "course": {
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+    } catch (err) {
+      toast({
+        title: err,
+      });
+    }
+  };
+
+  const uploadHandler = () => {
+    switch (pageType) {
+      case "university": {
+        universityUploadhandler();
+        break;
+      }
+      case "course": {
+        universityUploadhandler();
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  };
+
+  const onChangeHandler = (target) => {
+    const { name, value } = target;
+    setUniveristyData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
 
   return (
     <div className="w-full h-[100vh] flex items-center flex-col pt-5">
       <Card className="flex gap-y-2 flex-col p-5">
-        {type === UNIVERSITY && (
+        {pageType === UNIVERSITY && (
           <>
-            <Select>
-              <SelectTrigger className="w-[280px]">
-                <SelectValue placeholder="Select University" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Select University</SelectLabel>
-                  <SelectItem>hi</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <Select>
-              <SelectTrigger className="w-[280px]">
-                <SelectValue placeholder="Select University" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Select University</SelectLabel>
-                  <SelectItem>hi</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <Select>
-              <SelectTrigger className="w-[280px]">
-                <SelectValue placeholder="Select University" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Select University</SelectLabel>
-                  <SelectItem>hi</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <Label htmlFor="university">Create University</Label>
+            <Input
+              name="university"
+              value={univeristyData.university}
+              onChange={({ target }) => onChangeHandler(target)}
+              placeholder="Type unviersity..."
+              type="text"
+            />
           </>
         )}
-        {type === COURSE && <h2>course render</h2>}
-        {type === STREAM && <h2>stream render</h2>}
-        {type === SEMESTER && <h2>semester render</h2>}
-        {type === SUBJECT && <h2>subject render</h2>}
+        {pageType === COURSE && <h2>course render</h2>}
+        {pageType === STREAM && <h2>stream render</h2>}
+        {pageType === SEMESTER && <h2>semester render</h2>}
+        {pageType === SUBJECT && <h2>subject render</h2>}
+        <Button onClick={uploadHandler}>Upload</Button>
       </Card>
     </div>
   );
