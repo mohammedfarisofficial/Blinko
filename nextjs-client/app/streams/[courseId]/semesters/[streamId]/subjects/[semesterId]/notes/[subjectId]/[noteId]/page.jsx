@@ -7,6 +7,8 @@ import * as pdfjsLib from "pdfjs-dist";
 
 import { Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`;
 
@@ -18,8 +20,16 @@ const Note = () => {
   const { notes } = useSelector((state) => state.data.universities);
 
   const getBySlug = notes.filter((note) => note?.slug === noteId)[0];
+
+  const downloadNote = () => {
+    download(firebasePDFUrl, function (err) {
+      if (err) throw err;
+      console.log("meow");
+    });
+  };
   return (
     <div className="w-full h-[100vh] flex items-center flex-col">
+      <Link href={firebasePDFUrl}><Button>Download</Button></Link>
       <p>{noteId}</p>
       <p>{JSON.stringify(getBySlug)}</p>
       <Viewer theme="black" fileUrl={firebasePDFUrl} />
