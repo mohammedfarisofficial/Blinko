@@ -1,0 +1,2 @@
+export const HTTP_STATUS_FULFILLED   = 201;
+export const HTTP_STATUS_BAD_REQUEST = 400;
