@@ -1,12 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createUniversity } from "../async-actions/dataAction";
+import { createCourse, createUniversity } from "../async-actions/dataAction";
 import { toast } from "@/components/ui/use-toast";
 
 const dataSlice = createSlice({
   name: "data",
   initialState: {
     universities: null,
-    isUniveristyUploading: false,
+    isUniveristyCreating: false,
+    isCourseCreating: false,
   },
   reducers: {
     setUniversities: (state, action) => {
@@ -17,23 +18,45 @@ const dataSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    //Create University
     builder.addCase(createUniversity.fulfilled, (state, action) => {
       toast({
-        title: "New university uploaded!",
+        title: "New university created!",
         description: action.payload.title,
       });
-      state.isUniveristyUploading = false;
+      state.isUniveristyCreating = false;
       console.log("builder fullfil", action.payload);
     });
     builder.addCase(createUniversity.pending, (state, action) => {
-      state.isUniveristyUploading = true;
+      state.isUniveristyCreating = true;
     });
     builder.addCase(createUniversity.rejected, (state, action) => {
       toast({
         title: action.payload,
         variant: "destructive",
       });
-      state.isUniveristyUploading = false;
+      state.isUniveristyCreating = false;
+      return state;
+    });
+
+    //Create Course
+    builder.addCase(createCourse.fulfilled, (state, action) => {
+      toast({
+        title: "New course created!",
+        description: action.payload.title,
+      });
+      state.isCourseCreating = false;
+      console.log("builder fullfil", action.payload);
+    });
+    builder.addCase(createCourse.pending, (state, action) => {
+      state.isCourseCreating = true;
+    });
+    builder.addCase(createCourse.rejected, (state, action) => {
+      toast({
+        title: action.payload,
+        variant: "destructive",
+      });
+      state.isCourseCreating = false;
       return state;
     });
   },
