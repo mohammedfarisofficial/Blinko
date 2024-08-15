@@ -8,7 +8,7 @@ export const POST = async (request) => {
   const { title, university_id } = await request.json();
   if (!title || !university_id) {
     return new NextResponse("Title and University id are required!", {
-      status: 404,
+      status: 400,
     });
   }
   try {

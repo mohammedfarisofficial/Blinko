@@ -50,10 +50,10 @@ export const GET = async () => {
     await connect();
     const universities = await University.find();
     if (!universities) {
-      return new NextResponse("Universities not found!", { status: 404 });
+      return NextResponse("Universities not found!", { status: 404 });
     }
-    return new NextResponse(universities, { status: 200 });
+    return NextResponse(universities, { status: 200 });
   } catch (err) {
-    return new NextResponse(`Error: ${err.message}`, { status: 404 });
+    return NextResponse(`Error: ${err.message}`, { status: 404 });
   }
 };
