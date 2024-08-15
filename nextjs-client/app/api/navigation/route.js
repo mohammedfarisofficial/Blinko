@@ -4,6 +4,8 @@ import connect from "@/utils/db";
 import University from "@/modals/University";
 import Course from "@/modals/Course";
 
+export const dynamic = "force-dynamic";
+
 // GET navigation
 export const GET = async () => {
   try {

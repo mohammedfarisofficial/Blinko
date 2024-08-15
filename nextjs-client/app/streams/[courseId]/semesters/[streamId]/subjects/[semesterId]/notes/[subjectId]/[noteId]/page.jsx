@@ -9,6 +9,7 @@ import { Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Header from "@/components/header/header";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`;
 
@@ -17,22 +18,29 @@ const firebasePDFUrl =
 
 const Note = () => {
   const { noteId } = useParams();
-  const { notes } = useSelector((state) => state.data.universities);
+  const { notes, subjects } = useSelector((state) => state.data.universities);
 
   const getBySlug = notes.filter((note) => note?.slug === noteId)[0];
+  const getSubjectBySlug = subjects.filter(
+    (subject) => subject?._id === getBySlug?.subject_id
+  )[0];
 
-  const downloadNote = () => {
-    download(firebasePDFUrl, function (err) {
-      if (err) throw err;
-      console.log("meow");
-    });
-  };
+  console.log(getBySlug);
   return (
     <div className="w-full h-[100vh] flex items-center flex-col">
-      <Link href={firebasePDFUrl}><Button>Download</Button></Link>
-      <p>{noteId}</p>
-      <p>{JSON.stringify(getBySlug)}</p>
-      <Viewer theme="black" fileUrl={firebasePDFUrl} />
+      <Header>
+        <div>
+          <h1>{getBySlug.name}</h1>
+          <p className="text-gray-400 text-sm">{getSubjectBySlug.title}</p>
+          <p className="text-gray-400 text-sm">Click Download</p>
+        </div>
+        <Link href={getBySlug?.downloadURL}>
+          <Button>Download</Button>
+        </Link>
+      </Header>
+
+      {/* <p>{JSON.stringify(getBySlug)}</p> */}
+      <Viewer theme="black" fileUrl={getBySlug?.downloadURL} />
     </div>
   );
 };

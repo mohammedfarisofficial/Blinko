@@ -1,9 +1,10 @@
 "use client";
+import { useEffect } from "react";
+import { redirect } from "next/navigation";
+import { useSelector } from "react-redux";
 import Link from "next/link";
+
 import protectedRoute from "../auth/protectedRoute";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Header from "@/components/header/header";
 
 import {
   Table,
@@ -14,9 +15,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useEffect } from "react";
-import { redirect } from "next/navigation";
-import { useSelector } from "react-redux";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import Header from "@/components/header/header";
+
 
 const Dashboard = () => {
   const universities = useSelector((state) => state.data.universities);
@@ -29,13 +31,19 @@ const Dashboard = () => {
   return (
     <div className="w-full h-[100vh] flex items-center flex-col">
       <Header>
-        <div><h1>University Data</h1><p className="text-gray-400 text-sm">list of university data</p></div>
+        <div>
+          <h1>University Data</h1>
+          <p className="text-gray-400 text-sm">list of university data</p>
+        </div>
         <Link href="/dashboard/upload-university">
-          <Button>Add Unversity</Button>
+          <Button>Create Unversities</Button>
         </Link>
       </Header>
       <Header>
-        <div><h1>List of notes</h1><p className="text-gray-400 text-sm">list of uploaded notes</p></div>
+        <div>
+          <h1>List of notes</h1>
+          <p className="text-gray-400 text-sm">list of uploaded notes</p>
+        </div>
         <Link href="/dashboard/upload-note">
           <Button>Upload New</Button>
         </Link>
