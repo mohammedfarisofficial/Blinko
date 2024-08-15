@@ -56,6 +56,7 @@ const Upload = () => {
   const uploadNote = async () => {
     setIsLoading(true);
     try {
+      console.log(newNote)
       const response = await axios.post("/api/note", newNote);
       if (response.status === 201) {
         dispatch(setLocalNote(response.data));
