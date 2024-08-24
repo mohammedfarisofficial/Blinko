@@ -441,7 +441,7 @@ const Home = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <DropBox file={pdfFile} setFile={setPdfFile} />
+          <DropBox uploadProgress={pdfFile ? 100 : 0} file={pdfFile} setFile={setPdfFile} />
         </CardContent>
         <CardFooter className="flex justify-center gap-[15px]">
           <Button variant="secondary" onClick={generatePDF}>

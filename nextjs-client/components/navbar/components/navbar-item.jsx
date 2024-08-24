@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { SheetClose } from "@/components/ui/sheet";
 
 // const courses = [1, 2, 3, 4];
 const NavbarItem = ({
@@ -57,13 +58,15 @@ const NavbarItem = ({
         }`}
       >
         {courses?.map((item, index) => (
-          <div
-            className="h-6 my-2 rounded-lg pl-2 text-sm cursor-pointer hover:opacity-100 transition-opacity duration-200"
-            onClick={() => handleNavigate(item?.slug)}
-            key={index}
-          >
-            <p className="opacity-70">{item?.title}</p>
-          </div>
+          <SheetClose asChild>
+            <div
+              className="h-6 my-2 rounded-lg pl-2 text-sm flex justify-start cursor-pointer hover:opacity-100 transition-opacity duration-200"
+              onClick={() => handleNavigate(item?.slug)}
+              key={index}
+            >
+              <p className="opacity-70 ml-4">{item?.title}</p>
+            </div>
+          </SheetClose>
         ))}
       </div>
     </div>
