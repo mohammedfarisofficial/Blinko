@@ -80,7 +80,7 @@ const Navbar = () => {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        {isAuthenticated ? (
+        {/* {isAuthenticated ? (
           <>
             <Link href="/dashboard">Dashboard</Link>
             <Button onClick={() => dispatch(setLogout())}>Sign Out</Button>
@@ -94,7 +94,7 @@ const Navbar = () => {
             <Button onClick={() => router.push("/sign-in")}>Sign In</Button>
             <Button onClick={() => router.push("/sign-up")}>Sign Up</Button>
           </>
-        )}
+        )} */}
       </div>
     </div>
   );
